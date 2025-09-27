@@ -18,18 +18,18 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
+      # - name: Set up npm
+      #   uses: npm/action-setup@v3
+      #   with:
+      #     version: 8
 
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
       - name: Build
-        run: pnpm build
+        run: npm run build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4

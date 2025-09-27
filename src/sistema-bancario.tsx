@@ -784,7 +784,7 @@ export default function SistemaBancario() {
 
       <div className="relative w-full h-44 sm:h-60 overflow-hidden">
         <img
-          src="./public/banner.jpg"
+          src="./banner.jpg"
           alt="Banner Sistema Bancario"
           className="w-full h-full object-cover scale-105"
         />
