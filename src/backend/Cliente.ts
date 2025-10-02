@@ -1,6 +1,7 @@
 import type { UserData, Usuario } from "@/lib/core";
 import { readDb, writeDb } from "@/lib/database";
 import { registrarUsuario } from "@/lib/core";
+import type { Cuenta } from "./Cuenta";
 
 interface ICliente {
   nombre: string;
@@ -16,12 +17,16 @@ interface ICliente {
 export class Cliente {
   private nombre: string;
   private apellido: string;
-  private userName: string;
+  private usuario: string;
   private documento: string;
   private direccion: string;
   private contrasena: string;
   private saldo: number;
   private historial: string[];
+  private bloqueado: boolean = false;
+  private bloqueadoHasta: number | null = null;
+  private intentosFallidos: number = 0;
+  private cuentas:Cuenta[];
 
   constructor({
     nombre,
@@ -38,8 +43,9 @@ export class Cliente {
     this.direccion = direccion;
     this.contrasena = contrasena;
     this.saldo = saldo;
-    this.userName = usuario;
+    this.usuario = usuario;
     this.historial = [];
+    this.cuentas = [];
   }
 
   /* movimiento(descripcion: string, monto: number, idUser: string) {
@@ -52,6 +58,78 @@ export class Cliente {
       agregarMovimiento(usuario, "consignacion", monto);
     }
   } */
+
+    registrarUsuario(datos: UserData): boolean {
+    const usuarios = readDb();
+    if (usuarios[datos.cedula]) {
+      return false; // Usuario ya existe
+    }
+    const usuario = this.createUser(
+      datos.nombre,
+      datos.cedula,
+      datos.celular,
+      datos.email,
+      datos.password
+    );
+    usuarios[datos.cedula] = usuario;
+    writeDb(usuarios);
+    return true;
+  }
+
+  createUser(
+    nombre: string,
+    cedula: string,
+    celular: string,
+    email: string,
+    password: string
+  ): Usuario {
+    return {
+      id: cedula,
+      nombre,
+      cedula,
+      celular,
+      email,
+      password,
+      saldo: 0,
+      movimientos: [],
+      intentosFallidos: 0,
+      bloqueado: false,
+    };
+  }
+ 
+   agregarCuenta(cuenta: Cuenta) {
+    this.cuentas.push(cuenta);
+  }
+
+  iniciarSesion(pass: string): string {
+    const ahora = Date.now();
+    if (this.bloqueado && this.bloqueadoHasta && ahora < this.bloqueadoHasta) {
+      return "Usuario bloqueado por intentos fallidos. Intenta más tarde.";
+    }
+
+    if (this.contrasena === pass) {
+      this.intentosFallidos = 0;
+      this.bloqueado = false;
+      return "ok";
+    } else {
+      this.intentosFallidos++;
+      if (this.intentosFallidos >= 3) {
+        this.bloqueado = true;
+        this.bloqueadoHasta = ahora + 15 * 60 * 1000;
+        return "Cuenta bloqueada por exceso de intentos fallidos.";
+      }
+      return `Contraseña incorrecta. Intentos restantes: ${3 - this.intentosFallidos}`;
+    }
+  }
+
+  modificarDatos(nuevoNombre: string, nuevoApellido: string, nuevaDireccion: string) {
+    if (nuevoNombre) this.nombre = nuevoNombre;
+    if (nuevoApellido) this.apellido = nuevoApellido;
+    if (nuevaDireccion) this.direccion = nuevaDireccion;
+    this.guardar();
+    return "Datos modificados con éxito.";
+
+  }
 
   consultarSaldo() {
     return `El saldo de ${this.nombre} es $${this.saldo}`;
@@ -134,44 +212,6 @@ export class Cliente {
     };
     writeDb(usuarios);
     return true;
-  }
-
-  registrarUsuario(datos: UserData): boolean {
-    const usuarios = readDb();
-    if (usuarios[datos.cedula]) {
-      return false; // Usuario ya existe
-    }
-    const usuario = this.createUser(
-      datos.nombre,
-      datos.cedula,
-      datos.celular,
-      datos.email,
-      datos.password
-    );
-    usuarios[datos.cedula] = usuario;
-    writeDb(usuarios);
-    return true;
-  }
-
-  createUser(
-    nombre: string,
-    cedula: string,
-    celular: string,
-    email: string,
-    password: string
-  ): Usuario {
-    return {
-      id: cedula,
-      nombre,
-      cedula,
-      celular,
-      email,
-      password,
-      saldo: 0,
-      movimientos: [],
-      intentosFallidos: 0,
-      bloqueado: false,
-    };
   }
 
   static cargar(usuario: string): Cliente | null {

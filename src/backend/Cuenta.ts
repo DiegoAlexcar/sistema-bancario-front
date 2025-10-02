@@ -1,10 +1,10 @@
-interface ICuenta {
+export interface ICuenta {
   numeroCuenta: string;
   saldo: number;
   historial: string[];
 }
 
-class Cuentas implements ICuenta {
+export class Cuenta implements ICuenta {
   numeroCuenta: string;
   saldo: number;
   historial: string[];
@@ -16,27 +16,22 @@ class Cuentas implements ICuenta {
   }
 
   consultarSaldo() {
-    return `saldo de ${this.numeroCuenta}: $${this.saldo}`;
+    return `Saldo de ${this.numeroCuenta}: $${this.saldo}`;
   }
 
   realizarDeposito(monto: number) {
-    if (monto <= 0) {
-      return `El monto debe ser mayor a 0`;
-    }
+    if (monto <= 0) return `El monto debe ser mayor a 0`;
     this.saldo += monto;
-    this.historial.push(`Deposito: $${monto}`);
-    return `Consignacion exitosa de: $${monto}. Nuevo saldo: $${this.saldo}`;
+    this.historial.push(`Depósito: $${monto}`);
+    return `Consignación exitosa de: $${monto}. Nuevo saldo: $${this.saldo}`;
   }
 
   realizarRetiro(monto: number) {
-    if (monto <= 0) {
-      return `monto debe ser mayor a 0`;
-    }
-    if (monto > this.saldo) {
-      return `Saldo insuficiente`;
-    }
+    if (monto <= 0) return `El monto debe ser mayor a 0`;
+    if (monto > this.saldo) return `Saldo insuficiente`;
+
     this.saldo -= monto;
     this.historial.push(`Retiro: $${monto}`);
-    return `Retiro de $${monto} saldo de la cuenta: $${this.saldo}`;
+    return `Retiro de $${monto}. Saldo actual: $${this.saldo}`;
   }
 }
