@@ -173,7 +173,7 @@ const viewMovimientos = () => {
     console.error("\nError: Usuario no autenticado.");
     return;
   }
-  console.log("\n--- Historial de Movimientos ---");
+  console.log("\n--- movimientos de Movimientos ---");
   if (usuarioActual.movimientos.length === 0) {
     console.log("No hay movimientos registrados.");
   } else {

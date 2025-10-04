@@ -13,7 +13,7 @@ export class CuentaAhorros extends Cuenta {
     }
 
     this.saldo -= monto;
-    this.historial.push(`Retiro: $${monto}`);
+    this.movimientos.push(`Retiro: $${monto}`);
     return `Retiro de $${monto}, saldo actual: $${this.saldo}`;
   }
 }

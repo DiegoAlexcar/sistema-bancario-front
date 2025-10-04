@@ -4,7 +4,7 @@ class Cuentas{
         
         this.numeroCuenta=numeroCuenta;
         this.saldoInicial=saldoInicial;
-        this.historial=[];
+        this.movimientos=[];
     }
 
     consultarSaldo(){
@@ -16,7 +16,7 @@ class Cuentas{
             return `El monto debe ser mayor a 0`
         }
         this.saldo += monto;
-        this.historial.push(`Deposito: $${monto}`)
+        this.movimientos.push(`Deposito: $${monto}`)
         return `Consignacion exitosa de: $${monto}. Nuevo saldo: $${this.saldo}`
     }
 
@@ -28,7 +28,7 @@ class Cuentas{
             return `Saldo insuficiente`
         }
         this.saldo -= monto;
-        this.historial.push(`Retiro: $${monto}`)
+        this.movimientos.push(`Retiro: $${monto}`)
         return `Retiro de $${monto} saldo de la cuenta: $${this.saldo}`
     }
 }

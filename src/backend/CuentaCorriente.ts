@@ -15,7 +15,7 @@ export class CuentaCorriente extends Cuenta {
     }
 
     this.saldo -= monto;
-    this.historial.push(`Retiro (con sobregiro): $${monto}`);
+    this.movimientos.push(`Retiro (con sobregiro): $${monto}`);
     return `Retiro de $${monto}, saldo actual: $${this.saldo}`;
   }
 }

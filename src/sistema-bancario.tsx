@@ -135,9 +135,9 @@ const FormularioRegistro = ({
         usuario: "", //TODO: agregar usuario al formulario
         documento: formData.cedula,
         direccion: "", //TODO: agregar direccion al formulario
-        contrasena: formData.password,
+        password: formData.password,
         saldo: 0,
-        historial: [] as string[],
+        movimientos: [] as string[],
       }).guardar();
       if (registroUsuario) {
         alert("Usuario registrado exitosamente");
@@ -504,7 +504,7 @@ const OperacionComponent = ({
       consignar: "Consignar Dinero",
       cambiarPassword: "Cambiar Contraseña",
       consultar: "Consultar Saldo",
-      movimientos: "Historial de Movimientos",
+      movimientos: "movimientos de Movimientos",
       editarPerfil: "Editar Perfil",
     };
     return titulos[vista];
@@ -545,16 +545,16 @@ const OperacionComponent = ({
     return (
       <Card className="w-full max-w-lg mx-auto card-elevated">
         <CardHeader>
-          <CardTitle>Historial de Movimientos</CardTitle>
+          <CardTitle>Movimientos</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
-            {usuario.movimientos.length === 0 ? (
+            {!usuario.movimientos?.length ? (
               <p className="text-muted-foreground">
                 No hay movimientos registrados
               </p>
             ) : (
-              usuario.movimientos.map((mov: Movimiento) => (
+              usuario.movimientos?.map((mov: Movimiento) => (
                 <div key={mov.id} className="mov-item text-sm">
                   <div className="flex items-baseline justify-between">
                     <span className="capitalize font-medium">{mov.tipo}</span>

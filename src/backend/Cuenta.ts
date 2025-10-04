@@ -1,18 +1,18 @@
 export interface ICuenta {
   numeroCuenta: string;
   saldo: number;
-  historial: string[];
+  movimientos: string[];
 }
 
 export class Cuenta implements ICuenta {
   numeroCuenta: string;
   saldo: number;
-  historial: string[];
+  movimientos: string[];
 
   constructor(numeroCuenta: string, saldoInicial: number = 0) {
     this.numeroCuenta = numeroCuenta;
     this.saldo = saldoInicial;
-    this.historial = [];
+    this.movimientos = [];
   }
 
   consultarSaldo() {
@@ -22,7 +22,7 @@ export class Cuenta implements ICuenta {
   realizarDeposito(monto: number) {
     if (monto <= 0) return `El monto debe ser mayor a 0`;
     this.saldo += monto;
-    this.historial.push(`Depósito: $${monto}`);
+    this.movimientos.push(`Depósito: $${monto}`);
     return `Consignación exitosa de: $${monto}. Nuevo saldo: $${this.saldo}`;
   }
 
@@ -31,7 +31,7 @@ export class Cuenta implements ICuenta {
     if (monto > this.saldo) return `Saldo insuficiente`;
 
     this.saldo -= monto;
-    this.historial.push(`Retiro: $${monto}`);
+    this.movimientos.push(`Retiro: $${monto}`);
     return `Retiro de $${monto}. Saldo actual: $${this.saldo}`;
   }
 }

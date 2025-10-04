@@ -9,9 +9,9 @@ interface ICliente {
   usuario: string;
   documento: string;
   direccion: string;
-  contrasena: string;
+  password: string;
   saldo: number;
-  historial: string[];
+  movimientos: string[];
 }
 
 export class Cliente {
@@ -20,9 +20,9 @@ export class Cliente {
   private usuario: string;
   private documento: string;
   private direccion: string;
-  private contrasena: string;
+  private password: string;
   private saldo: number;
-  private historial: string[];
+  private movimientos: string[];
   private bloqueado: boolean = false;
   private bloqueadoHasta: number | null = null;
   private intentosFallidos: number = 0;
@@ -34,23 +34,23 @@ export class Cliente {
     usuario,
     documento,
     direccion,
-    contrasena,
+    password,
     saldo = 0,
   }: ICliente) {
     this.nombre = nombre;
     this.apellido = apellido;
     this.documento = documento;
     this.direccion = direccion;
-    this.contrasena = contrasena;
+    this.password = password;
     this.saldo = saldo;
     this.usuario = usuario;
-    this.historial = [];
+    this.movimientos = [];
     this.cuentas = [];
   }
 
   /* movimiento(descripcion: string, monto: number, idUser: string) {
     const fecha = new Date().toLocaleString();
-    this.historial.push(`[${fecha}] ${descripcion}`);
+    this.movimientos.push(`[${fecha}] ${descripcion}`);
     agregarMovimiento(this as unknown as Usuario, "retiro", monto);
     const usuarios = readDb();
     const usuario = usuarios[idUser];
@@ -107,7 +107,7 @@ export class Cliente {
       return "Usuario bloqueado por intentos fallidos. Intenta más tarde.";
     }
 
-    if (this.contrasena === pass) {
+    if (this.password === pass) {
       this.intentosFallidos = 0;
       this.bloqueado = false;
       return "ok";
@@ -158,10 +158,10 @@ export class Cliente {
   }
 
   consultarMovimientos() {
-    if (this.historial.length === 0) {
+    if (this.movimientos.length === 0) {
       return `${this.nombre} no tiene movimientos registrados`;
     }
-    return `historial de movimientos ${this.nombre}: \n${this.historial.join(
+    return `movimientos de movimientos ${this.nombre}: \n${this.movimientos.join(
       "\n"
     )}`;
   }
@@ -224,10 +224,10 @@ export class Cliente {
         documento: obj.documento,
         direccion: obj.direccion,
         usuario: obj.usuario,
-        contrasena: obj.contrasena,
+        password: obj.password,
         saldo: obj.saldo,
       } as ICliente);
-      cliente.historial = obj.historial;
+      cliente.movimientos = obj.movimientos;
       return cliente;
     }
     return null;

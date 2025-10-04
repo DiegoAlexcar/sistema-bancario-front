@@ -5,7 +5,7 @@ class Cliente {
     documento,
     direccion,
     usuario,
-    contrasena,
+    password,
     saldoInicial = 0
   ) {
     this.nombre = nombre;
@@ -13,14 +13,14 @@ class Cliente {
     this.documento = documento;
     this.direccion = direccion;
     // this.usuario=usuario;
-    this.contrasena = contrasena;
+    this.password = password;
     this.saldo = saldoInicial;
-    this.historial = [];
+    this.movimientos = [];
   }
 
   Movimiento(descripcion) {
     const fecha = new Date().toLocaleString();
-    this.historial.push(`[${fecha}] ${descripcion}`);
+    this.movimientos.push(`[${fecha}] ${descripcion}`);
   }
 
   consultarSaldo() {
@@ -50,10 +50,10 @@ class Cliente {
   }
 
   consultarMovimientos() {
-    if (this.historial.length === 0) {
+    if (this.movimientos.length === 0) {
       return `${this.nombre} no tiene movimientos registrados`;
     }
-    return `historial de movimientos ${this.nombre}: \n${this.historial.join(
+    return `movimientos de movimientos ${this.nombre}: \n${this.movimientos.join(
       "\n"
     )}`;
   }
@@ -88,10 +88,10 @@ class Cliente {
         obj.documento,
         obj.direccion,
         obj.usuario,
-        obj.contrasena,
+        obj.password,
         obj.saldo
       );
-      cliente.historial = obj.historial;
+      cliente.movimientos = obj.movimientos;
       return cliente;
     }
     return null;
